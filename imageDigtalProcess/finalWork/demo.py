@@ -97,7 +97,7 @@ def addPic():  # 一个方法，每次按button就给b+1
     select_file_path = tk.filedialog.askopenfilename()
     colors , imgs = vl.PlateRecognize(select_file_path)
     for img in imgs:
-        cv2.imshow("result",img)
+        cv2.imshow("result", img)
         cv2.waitKey(0)
 
 def showProcess():
