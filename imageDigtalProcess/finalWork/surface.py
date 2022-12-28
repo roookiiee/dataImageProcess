@@ -1,11 +1,13 @@
+import getpass
+import os
+import winreg
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
-from tkinter import ttk
+
 import cv2 as cv
 from PIL import Image, ImageTk
-import numpy as np
-import sys, random, datetime, os, winreg, getpass, time, threading
+
 import vehicleLicense
 
 
@@ -37,8 +39,8 @@ class LPRSurface(Tk):
     tkHeigth = labelPicHeight + buttonHeight * 4
     isPicProcessing = False
     root = None
-    entryPlateNumList = ""
     entryPlateNum = None
+    entryPlateColor = None
 
     def resizePicture(self, imgCV):
         if imgCV is None:
@@ -107,11 +109,17 @@ class LPRSurface(Tk):
         if self.imgOri is None:
             print("Load picture fail!")
             return False
-
         # self.imgOri = ImageTk.PhotoImage(self.imgOri)
         self.labelPic.configure(image=self.imgOri, bg="pink")
+
+        # 车牌颜色识别
+        cardColor = vehicleLicense.getColor(fileName)
+        self.entryPlateColor.delete(0, END)  # 删除原来的文本内容
+        self.entryPlateColor.insert(END, cardColor)
+
+        # 车牌号码识别
         # 调用函数切割车牌
-        dist, car_plate = vehicleLicense.PlateRecognize(fileName)
+        dist, car_plate = vehicleLicense.PlateRecognize(fileName, cardColor)
         # 调用工具库识别车牌
         res = vehicleLicense.characterRecognize(car_plate)
         # 判断识别是否成功
@@ -136,7 +144,7 @@ class LPRSurface(Tk):
 
             # Vehicle Plate Number Label:
             self.labelPlateNum = Label(self, text="Vehicle License Plate Number:", anchor=SW)
-            self.labelPlateNum.place(x=0, y=self.labelPicHeight, \
+            self.labelPlateNum.place(x=0, y=self.labelPicHeight,
                                      width=self.textWidth * 20, height=self.textHeight)
 
             # Vehicle Colour Label:
@@ -148,22 +156,22 @@ class LPRSurface(Tk):
             # Picture Button
             self.buttonPic = Button(self, text="Load Picture", command=self.loadPicture)
             self.buttonPic.place(x=self.tkWidth - 3 * self.buttonWidth / 2,
-                                 y=self.labelPicHeight + self.buttonHeight / 2, \
+                                 y=self.labelPicHeight + self.buttonHeight / 2,
                                  width=self.buttonWidth, height=self.buttonHeight)
 
         def entryInit():
             # Vehicle Plate Number Output
-            entryPlateNum = Entry(self)
-            self.entryPlateNum = entryPlateNum
-            entryPlateNum.place(x=self.textWidth, y=self.labelPicHeight + self.textHeight, \
-                                width=self.textWidth * (42 - 1), height=self.textHeight)
-            entryPlateNum.insert(END, "")
+            self.entryPlateNum = Entry(self)
+            # self.entryPlateNum = entryPlateNum
+            self.entryPlateNum.place(x=self.textWidth, y=self.labelPicHeight + self.textHeight,
+                                     width=self.textWidth * (42 - 1), height=self.textHeight)
+            self.entryPlateNum.insert(END, "")
 
             # Vehicle Plate Color Output
             self.entryPlateColor = Entry(self)
-            self.entryPlateColor.place(x=0, y=self.labelPicHeight + self.textHeight * 3, \
+            self.entryPlateColor.place(x=0, y=self.labelPicHeight + self.textHeight * 3,
                                        width=self.textWidth * (42 - 1), height=self.textHeight)
-            self.entryPlateColor.insert(END, "yellow")
+            self.entryPlateColor.insert(END, "")
 
         labelInit()
         buttonInit()
