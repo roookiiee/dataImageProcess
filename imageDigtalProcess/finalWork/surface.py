@@ -9,6 +9,7 @@ import cv2 as cv
 from PIL import Image, ImageTk
 
 import vehicleLicense
+import time
 
 
 # PicPath: Save the last picture file path, this picture should be opened successful.
@@ -72,6 +73,7 @@ class LPRSurface(Tk):
 
     # Load picture
     def loadPicture(self):
+        start = time.time()
         # Get Picture Path
         if True == self.isPicProcessing:
             print("Please wait until previous picture process finish!!!")
@@ -130,6 +132,9 @@ class LPRSurface(Tk):
             num = res[0][1][0]
             self.entryPlateNum.delete(0, END)  # 删除原来的文本内容
             self.entryPlateNum.insert(END, num)
+        end = time.time()
+        runTime = end - start
+        print("运行时间：", runTime)
 
     def __init__(self, *args, **kw):
         super().__init__()

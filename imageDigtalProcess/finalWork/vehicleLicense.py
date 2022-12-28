@@ -117,8 +117,8 @@ def getColor(filename):
 
     # 根据阈值构建掩膜
     mask_blue = cv2.inRange(hsv, lower_blue, upper_blue)
-    mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)  #
-    mask_green = cv2.inRange(hsv, lower_green, upper_green)  #
+    mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    mask_green = cv2.inRange(hsv, lower_green, upper_green)
 
     # 对原图像和掩膜进行位运算
     # src1：第一个图像（合并的第一个对象）src2：第二个图像（合并的第二个对象）mask：理解为要合并的规则。
